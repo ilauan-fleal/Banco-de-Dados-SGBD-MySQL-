@@ -43,6 +43,8 @@ CREATE TABLE Estaleiro_Navios.endereco(
     cep VARCHAR(9) NOT NULL
 
 );
+ALTER TABLE Estaleiro_Navios.endereco
+ADD COLUMN rua VARCHAR(25) NOT NULL AFTER cep;
 
 #Criando tabela com chave estrangeira, referenciada, a partir da chave primária: cod_cliente.
 
@@ -50,6 +52,8 @@ CREATE TABLE Estaleiro_Navios.identificador_cliente(
     fk_cod_cliente INT,
     FOREIGN KEY(fk_cod_cliente) REFERENCES Estaleiro_Navios.cliente(cod_cliente)
 );
+
+
 
 #Criando uma tabela, para os funcionários
 
@@ -63,34 +67,6 @@ CREATE TABLE Estaleiro_Navios.funcionario(
 );
 
 
-#Criando tabela, para o cargo
-
-CREATE TABLE Estaleiro_Navios.cargo(
-    cod_cargo INT NOT NULL AUTO_INCREMENT,
-    horas_semanais TIME NOT NULL,
-    salario FLOAT NOT NULL,
-    nome_cargo VARCHAR(10),
-    PRIMARY KEY(cod_cargo)
-);
-
-#Criando mais uma tabela associada ao cargo exercido::
-
-CREATE TABLE Estaleiro_Navios.bonificacao(
-    diaria FLOAT NOT NULL,
-    mensal FLOAT NOT NULL,
-    fk_funcionario_cargo_cod_funcionario INT , FOREIGN KEY(fk_funcionario_cargo_cod_funcionario) REFERENCES Estaleiro_Navios.funcionario(cod_funcionario),
-    fk_funcionario_cargo_cod_cargo INT, FOREIGN KEY(fk_funcionario_cargo_cod_cargo) REFERENCES Estaleiro_Navios.cargo(cod_cargo)
-)
-
-
-
-#Criando tabela para caracterizar a relação funcionário-cargo
-
-CREATE TABLE Estaleiro_Navios.funcionario_cargo(
-
-    fk_cod_funcionario INT, FOREIGN KEY(fk_cod_funcionario) REFERENCES Estaleiro_Navios.funcionario(cod_funcionario),
-    fk_cod_cargo INT, FOREIGN KEY(fk_cod_cargo) REFERENCES Estaleiro_Navios.cargo(cod_cargo)
-);
 
 
 
@@ -107,10 +83,10 @@ CREATE TABLE Estaleiro_Navios.embarcacao(
 #Criando tabela, para especificação das embarcações
 
 CREATE TABLE Estaleiro_Navios.especificacao(
-    peso FLOAT NOT NULL,
-    altura FLOAT NOT NULL,
-    capacidade_carga FLOAT NOT NULL,
-    capacidade_ocupantes INT NOT NULL
+    peso VARCHAR(10) NOT NULL ,
+    altura VARCHAR(20) NOT NULL ,
+    capacidade_carga VARCHAR(30) NOT NULL ,
+    capacidade_ocupantes VARCHAR(40) NOT NULL
 );
 
 #Criando tabela, para os projetos
@@ -205,39 +181,14 @@ CREATE TABLE Estaleiro_Navios.funcionario_compra(
 );
 
 
-#Mais uma tabela para relação funcionário-trabalha
-
-CREATE TABLE Estaleiro_Navios.funcionario_trabalha(
-    fk_funcionario_cargo_cod_funcionario INT, FOREIGN KEY(fk_funcionario_cargo_cod_funcionario) REFERENCES Estaleiro_Navios.funcionario(cod_funcionario),
-    fk_setor_cod_setor INT, FOREIGN KEY(fk_setor_cod_setor) REFERENCES Estaleiro_Navios.setor(cod_setor)
-
-);
-
-#Mais uma tabela para relação funcionário-supervisor
-
-CREATE TABLE Estaleiro_Navios.funcionario_supervisionar(
-    fk_funcionario_cargo_cod_funcionario INT, FOREIGN KEY(fk_funcionario_cargo_cod_funcionario) REFERENCES Estaleiro_Navios.funcionario(cod_funcionario),
-    fk_funcionario_cargo_cod_cargo INT, FOREIGN KEY(fk_funcionario_cargo_cod_cargo) REFERENCES Estaleiro_Navios.cargo(cod_cargo)
-
-);
-
-#Mais uma tabela para relação funcionário-gestor
-
-CREATE TABLE Estaleiro_Navios.funcionario_gerir(
-    fk_funcionario_cargo_cod_funcionario INT , FOREIGN KEY(fk_funcionario_cargo_cod_funcionario) REFERENCES Estaleiro_Navios.funcionario(cod_funcionario),
-    fk_funcionario_cargo_cod_cargo INT, FOREIGN KEY(fk_funcionario_cargo_cod_cargo) REFERENCES Estaleiro_Navios.cargo(cod_cargo),
-    fk_setor_cod_setor INT, FOREIGN KEY(fk_setor_cod_setor) REFERENCES Estaleiro_Navios.setor(cod_setor)
-
-);
 
 #Aqui é construída uma tabela, para a relação funcionário-cargo-setor-bonificação.
 
 CREATE TABLE Estaleiro_Navios.funcionario_cargo_setor_bonificacao(
     fk_funcionario_cargo_cod_funcionario INT, FOREIGN KEY(fk_funcionario_cargo_cod_funcionario) REFERENCES Estaleiro_Navios.funcionario(cod_funcionario),
-    fk_funcionario_cargo_cod_cargo INT, FOREIGN KEY(fk_funcionario_cargo_cod_cargo) REFERENCES Estaleiro_Navios.cargo(cod_cargo),
     fk_setor_cod_setor INT, FOREIGN KEY(fk_setor_cod_setor) REFERENCES Estaleiro_Navios.setor(cod_setor),
-    data_de_nascimento INT(8) NOT NULL,
-    data_de_admissao INT(8) NOT NULL,
+    data_de_nascimento DATE NOT NULL,
+    data_de_admissao DATE NOT NULL,
     nome VARCHAR(10) NOT NULL,
     nome_do_cargo VARCHAR(20) NOT NULL,
     salario FLOAT(2) NOT NULL,
@@ -246,4 +197,14 @@ CREATE TABLE Estaleiro_Navios.funcionario_cargo_setor_bonificacao(
     diaria FLOAT(2) NOT NULL,
     mensal FLOAT(2) NOT NULL
 );
+
+
+#Tabela para uma identificação específica de cada um dos funcionárioss
+
+CREATE TABLE Estaleiro_Navios.identificador_funcionario(
+    fk_funcionario INT, FOREIGN KEY(fk_funcionario) REFERENCES Estaleiro_Navios.funcionario(cod_funcionario)
+
+);
+
+
 
